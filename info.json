@@ -1,0 +1,32 @@
+{
+  "id": "[rust].demo.pylogmon.potext",
+  "plugin_type": "translate",
+  "display": "必应翻译",
+  "needs": [],
+  "language": {
+    "auto": "",
+    "zh_cn": "zh-Hans",
+    "zh_tw": "zh-Hant",
+    "yue": "yue",
+    "en": "en",
+    "ja": "ja",
+    "ko": "ko",
+    "fr": "fr",
+    "es": "es",
+    "ru": "ru",
+    "de": "de",
+    "it": "it",
+    "tr": "tr",
+    "pt": "pt-pt",
+    "pt_br": "pt",
+    "vi": "vi",
+    "id": "id",
+    "th": "th",
+    "ms": "ms",
+    "ar": "ar",
+    "hi": "hi",
+    "mn_cy": "mn-Cyrl",
+    "mn_mo": "mn-Mong",
+    "km": "km"
+  }
+}
