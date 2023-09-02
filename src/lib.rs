@@ -23,19 +23,19 @@ pub struct Need {
 }
 
 #[no_mangle]
-pub async fn translate(
+pub fn translate(
     text: &str,
     from: &str,
     to: &str,
     _needs: HashMap<String, String>,
 ) -> Result<String, Box<dyn Error>> {
-    let client = reqwest::ClientBuilder::new().build()?;
+    let client = reqwest::blocking::ClientBuilder::new().build()?;
 
     let token=client
         .get("https://edge.microsoft.com/translate/auth")
         .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36 Edg/113.0.1774.42")
-        .send().await?
-        .text().await?;
+        .send()?
+        .text()?;
 
     let res:Value=client.post("https://api-edge.cognitive.microsofttranslator.com/translate")
                         .header("accept", "*/*")
@@ -61,7 +61,7 @@ pub async fn translate(
                                     ("includeSentenceLength", "true"),
                         ])
                         .body(format!("[{{ \"Text\": \"{}\" }}]", text))
-                        .send().await?.json().await?;
+                        .send()?.json()?;
 
     fn parse_result(res: Value) -> Option<String> {
         let result = res
@@ -96,11 +96,9 @@ pub fn info() -> Result<Info, Box<dyn Error>> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    #[tokio::test]
-    async fn try_request() {
-        let result = translate("Hello World\n\nHello Pot", "", "zh-Hans", HashMap::new())
-            .await
-            .unwrap();
+    #[test]
+    fn try_request() {
+        let result = translate("Hello World\n\nHello Pot", "", "zh-Hans", HashMap::new()).unwrap();
         println!("{result}");
     }
 
