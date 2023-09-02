@@ -1,26 +1,6 @@
-use serde::Deserialize;
 use serde_json::Value;
 use std::collections::HashMap;
 use std::error::Error;
-use std::fs::File;
-use std::io::BufReader;
-
-#[allow(dead_code)]
-#[derive(Debug, Deserialize)]
-pub struct Info {
-    id: String,
-    display: String,
-    plugin_type: String,
-    needs: Vec<Need>,
-    language: HashMap<String, String>,
-}
-
-#[allow(dead_code)]
-#[derive(Debug, Deserialize)]
-pub struct Need {
-    key: String,
-    display: String,
-}
 
 #[no_mangle]
 pub fn translate(
@@ -84,15 +64,6 @@ pub fn translate(
     }
 }
 
-#[no_mangle]
-pub fn info() -> Result<Info, Box<dyn Error>> {
-    let file = File::open("info.json")?;
-    let reader = BufReader::new(file);
-
-    let info: Info = serde_json::from_reader(reader)?;
-    Ok(info)
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -100,11 +71,5 @@ mod tests {
     fn try_request() {
         let result = translate("Hello World\n\nHello Pot", "", "zh-Hans", HashMap::new()).unwrap();
         println!("{result}");
-    }
-
-    #[test]
-    fn try_get_info() {
-        let info = info().unwrap();
-        println!("{info:?}");
     }
 }

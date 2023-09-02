@@ -1,6 +1,7 @@
 {
   "id": "[rust].demo.pylogmon.potext",
   "plugin_type": "translate",
+  "icon": "bing.svg",
   "display": "必应翻译",
   "needs": [],
   "language": {
