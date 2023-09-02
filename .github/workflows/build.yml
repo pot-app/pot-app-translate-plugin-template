@@ -1,0 +1,67 @@
+name: Build
+on: push
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 1
+      - name: Install Rust Stable
+        uses: dtolnay/rust-toolchain@stable
+      - name: check
+        run: cargo check --all --all-targets
+  build:
+    needs: check
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [windows-latest, macos-latest, ubuntu-latest]
+        include:
+          - platform: windows-latest
+            target: x86_64-pc-windows-msvc
+            ext: dll
+          - platform: windows-latest
+            target: i686-pc-windows-msvc
+            ext: dll
+          - platform: windows-latest
+            target: aarch64-pc-windows-msvc
+            ext: dll
+          - platform: macos-latest
+            target: x86_64-apple-darwin
+            ext: dylib
+          - platform: macos-latest
+            target: aarch64-apple-darwin
+            ext: dylib
+          - platform: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+            ext: so
+          - platform: ubuntu-latest
+            target: i686-unknown-linux-gnu
+            ext: so
+          - platform: ubuntu-latest
+            target: aarch64-unknown-linux-gnu
+            ext: so
+          - platform: ubuntu-latest
+            target: armv7-unknown-linux-gnueabihf
+            ext: so
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 1
+      - name: Install Rust Stable
+        uses: dtolnay/rust-toolchain@stable
+      - name: install toolchain
+        run: |
+          rustup target add ${{ matrix.target }}
+          rustup toolchain install --force-non-host stable-${{ matrix.target }}
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.target }}
+          path: target/${{ matrix.target }}/release/plugin.${{ matrix.ext }}
+          if-no-files-found: error
