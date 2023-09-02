@@ -59,6 +59,8 @@ jobs:
         run: |
           rustup target add ${{ matrix.target }}
           rustup toolchain install --force-non-host stable-${{ matrix.target }}
+      - name: Build
+        run: cargo build --release --target ${{ matrix.target }}
       - name: Upload Artifacts
         uses: actions/upload-artifact@v3
         with:
