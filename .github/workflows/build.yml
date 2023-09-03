@@ -39,11 +39,16 @@ jobs:
           rustup toolchain install --force-non-host stable-${{ matrix.target }}
       - name: Build
         run: cargo build --release --target ${{ matrix.target }}
+      - name: Package ZIP
+        uses: ./package-plugin
+        with:
+          target: ${{ matrix.target }}
+          ext: dll
       - name: Upload Artifacts
         uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.target }}
-          path: target/${{ matrix.target }}/release/plugin.dll
+          path: "*.potext"
           if-no-files-found: error
   build-for-macos:
     needs: check
@@ -68,11 +73,16 @@ jobs:
         run: cargo build --release --target ${{ matrix.target }}
       - name: Rename
         run: sudo mv target/${{ matrix.target }}/release/libplugin.dylib target/${{ matrix.target }}/release/plugin.dylib
+      - name: Package ZIP
+        uses: ./package-plugin
+        with:
+          target: ${{ matrix.target }}
+          ext: dylib
       - name: Upload Artifacts
         uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.target }}
-          path: target/${{ matrix.target }}/release/plugin.dylib
+          path: "*.potext"
           if-no-files-found: error
   build-for-linux:
     needs: check
@@ -98,9 +108,14 @@ jobs:
         with:
           target: ${{ matrix.target }}
           toolchain: stable-${{ matrix.target }}
+      - name: Package ZIP
+        uses: ./package-plugin
+        with:
+          target: ${{ matrix.target }}
+          ext: so
       - name: Upload Artifacts
         uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.target }}
-          path: "[plugin].*.zip"
+          path: "*.potext"
           if-no-files-found: error

@@ -1,5 +1,5 @@
 {
-  "id": "[plugin].bing.pylogmon.potext",
+  "id": "[plugin].com.pot-app.bing",
   "plugin_type": "translate",
   "icon": "icon.svg",
   "display": "必应翻译",
