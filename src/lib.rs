@@ -1,61 +1,34 @@
 use serde_json::Value;
 use std::collections::HashMap;
 use std::error::Error;
+use urlencoding::encode;
 
 #[no_mangle]
 pub fn translate(
-    text: &str,
-    from: &str,
-    to: &str,
-    _needs: HashMap<String, String>,
+    text: &str, // 待翻译文本
+    from: &str, // 源语言
+    to: &str,   // 目标语言
+    // (pot会根据info.json 中的 language 字段传入插件需要的语言代码，无需再次转换)
+    needs: HashMap<String, String>, // 插件需要的其他参数,由info.json定义
 ) -> Result<String, Box<dyn Error>> {
     let client = reqwest::blocking::ClientBuilder::new().build()?;
 
-    let token=client
-        .get("https://edge.microsoft.com/translate/auth")
-        .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36 Edg/113.0.1774.42")
-        .send()?
-        .text()?;
+    let mut url = needs["requestPath"].clone();
+    if !url.starts_with("http") {
+        url = format!("https://{}", url);
+    }
+    let plain_text = text.replace("/", "@@");
+    let encode_text = encode(plain_text.as_str());
 
-    let res:Value=client.post("https://api-edge.cognitive.microsofttranslator.com/translate")
-                        .header("accept", "*/*")
-                        .header("accept-language", "zh-TW,zh;q=0.9,ja;q=0.8,zh-CN;q=0.7,en-US;q=0.6,en;q=0.5")
-                        .header("authorization", format!("Bearer {token}"))
-                        .header("cache-control", "no-cache")
-                        .header("content-type", "application/json")
-                        .header("pragma", "no-cache")
-                        .header("sec-ch-ua", "\"Microsoft Edge\";v=\"113\", \"Chromium\";v=\"113\", \"Not-A.Brand\";v=\"24\"")
-                        .header("sec-ch-ua-mobile", "?0")
-                        .header("sec-ch-ua-platform", "\"Windows\"")
-                        .header("sec-fetch-dest", "empty")
-                        .header("sec-fetch-mode", "cors")
-                        .header("sec-fetch-site", "cross-site")
-                        .header("Referer", "https://pot-app.com/")
-                        .header("Referrer-Policy", "strict-origin-when-cross-origin")
-                        .header("User-Agent",
-                                        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36 Edg/113.0.1774.42")
-                        .query(&[
-                                    ("from", from),
-                                    ("to", to),
-                                    ("api-version", "3.0"),
-                                    ("includeSentenceLength", "true"),
-                        ])
-                        .body(format!("[{{ \"Text\": \"{}\" }}]", text))
-                        .send()?.json()?;
+    let res: Value = client
+        .get(format!("{url}/api/v1/{from}/{to}/{encode_text}"))
+        .send()?
+        .json()?;
 
     fn parse_result(res: Value) -> Option<String> {
-        let result = res
-            .as_array()?
-            .get(0)?
-            .as_object()?
-            .get("translations")?
-            .as_array()?
-            .get(0)?
-            .as_object()?
-            .get("text")?
-            .as_str()?
-            .to_string();
-        Some(result)
+        let result = res.as_object()?.get("translation")?.as_str()?.to_string();
+
+        Some(result.replace("@@", "/"))
     }
     if let Some(result) = parse_result(res) {
         return Ok(result);
@@ -69,7 +42,9 @@ mod tests {
     use super::*;
     #[test]
     fn try_request() {
-        let result = translate("Hello World\n\nHello Pot", "", "zh-Hans", HashMap::new()).unwrap();
+        let mut needs = HashMap::new();
+        needs.insert("requestPath".to_string(), "lingva.pot-app.com".to_string());
+        let result = translate("你好 世界！", "auto", "en", needs).unwrap();
         println!("{result}");
     }
 }

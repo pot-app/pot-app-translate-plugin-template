@@ -1,14 +1,13 @@
 {
-  "id": "[plugin].com.pot-app.bing",
+  "id": "[plugin].com.pot-app.lingva",
   "plugin_type": "translate",
-  "icon": "icon.svg",
-  "display": "必应翻译",
-  "needs": [],
+  "icon": "lingva.svg",
+  "display": "Lingva",
+  "needs": [{ "key": "requestPath", "display": "请求地址" }],
   "language": {
-    "auto": "",
-    "zh_cn": "zh-Hans",
-    "zh_tw": "zh-Hant",
-    "yue": "yue",
+    "auto": "auto",
+    "zh_cn": "zh",
+    "zh_tw": "zh_HANT",
     "en": "en",
     "ja": "ja",
     "ko": "ko",
@@ -18,7 +17,7 @@
     "de": "de",
     "it": "it",
     "tr": "tr",
-    "pt": "pt-pt",
+    "pt": "pt",
     "pt_br": "pt",
     "vi": "vi",
     "id": "id",
@@ -26,8 +25,7 @@
     "ms": "ms",
     "ar": "ar",
     "hi": "hi",
-    "mn_cy": "mn-Cyrl",
-    "mn_mo": "mn-Mong",
+    "mn_cy": "mn",
     "km": "km"
   }
 }
