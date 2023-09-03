@@ -4,6 +4,8 @@ on: push
 jobs:
   check:
     runs-on: ubuntu-latest
+    outputs:
+      name: ${{ steps.getname.outputs.NAME }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -13,6 +15,11 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
       - name: check
         run: cargo check --all --all-targets
+      - name: Install zip
+        run: sudo apt-get install -y zip jq
+      - id: getname
+        run: |
+          echo "NAME=$(cat info.json | jq '.id' | tr -d '"')" >> "$GITHUB_OUTPUT"
   build-for-windows:
     needs: check
     strategy:
@@ -39,11 +46,10 @@ jobs:
           rustup toolchain install --force-non-host stable-${{ matrix.target }}
       - name: Build
         run: cargo build --release --target ${{ matrix.target }}
-      - name: Package ZIP
-        uses: ./package-plugin
+      - name: Compress
+        uses: TonyBogdanov/zip@1.0
         with:
-          target: ${{ matrix.target }}
-          ext: dll
+          args: zip ${{needs.check.outputs.name}}.potext ./info.json ./icon.svg ./target/${{ matrix.target }}/release/plugin.dll
       - name: Upload Artifacts
         uses: actions/upload-artifact@v3
         with:
@@ -73,11 +79,10 @@ jobs:
         run: cargo build --release --target ${{ matrix.target }}
       - name: Rename
         run: sudo mv target/${{ matrix.target }}/release/libplugin.dylib target/${{ matrix.target }}/release/plugin.dylib
-      - name: Package ZIP
-        uses: ./package-plugin
+      - name: Compress
+        uses: TonyBogdanov/zip@1.0
         with:
-          target: ${{ matrix.target }}
-          ext: dylib
+          args: zip ${{needs.check.outputs.name}}.potext ./info.json ./icon.svg ./target/${{ matrix.target }}/release/plugin.dylib
       - name: Upload Artifacts
         uses: actions/upload-artifact@v3
         with:
@@ -108,11 +113,10 @@ jobs:
         with:
           target: ${{ matrix.target }}
           toolchain: stable-${{ matrix.target }}
-      - name: Package ZIP
-        uses: ./package-plugin
+      - name: Compress
+        uses: TonyBogdanov/zip@1.0
         with:
-          target: ${{ matrix.target }}
-          ext: so
+          args: zip ${{needs.check.outputs.name}}.potext ./info.json ./icon.svg ./target/${{ matrix.target }}/release/plugin.so
       - name: Upload Artifacts
         uses: actions/upload-artifact@v3
         with:
