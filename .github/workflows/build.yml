@@ -102,5 +102,5 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.target }}
-          path: target/${{ matrix.target }}/release/plugin.so
+          path: "[plugin].*.zip"
           if-no-files-found: error
