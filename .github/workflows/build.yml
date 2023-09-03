@@ -6,6 +6,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       name: ${{ steps.getname.outputs.NAME }}
+      icon: ${{ steps.getname.outputs.ICON }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -20,6 +21,7 @@ jobs:
       - id: getname
         run: |
           echo "NAME=$(cat info.json | jq '.id' | tr -d '"')" >> "$GITHUB_OUTPUT"
+          echo "ICON=$(cat info.json | jq '.icon' | tr -d '"')" >> "$GITHUB_OUTPUT"
   build-for-windows:
     needs: check
     strategy:
@@ -46,10 +48,10 @@ jobs:
           rustup toolchain install --force-non-host stable-${{ matrix.target }}
       - name: Build
         run: cargo build --release --target ${{ matrix.target }}
-      - name: Compress
-        uses: TonyBogdanov/zip@1.0
+      - uses: vimtor/action-zip@v1
         with:
-          args: zip ${{needs.check.outputs.name}}.potext ./info.json ./icon.svg ./target/${{ matrix.target }}/release/plugin.dll
+          files: info.json ${{needs.check.outputs.name}} target/${{ matrix.target }}/release/plugin.dll
+          dest: ${{needs.check.outputs.name}}.potext
       - name: Upload Artifacts
         uses: actions/upload-artifact@v3
         with:
@@ -79,10 +81,10 @@ jobs:
         run: cargo build --release --target ${{ matrix.target }}
       - name: Rename
         run: sudo mv target/${{ matrix.target }}/release/libplugin.dylib target/${{ matrix.target }}/release/plugin.dylib
-      - name: Compress
-        uses: TonyBogdanov/zip@1.0
+      - uses: vimtor/action-zip@v1
         with:
-          args: zip ${{needs.check.outputs.name}}.potext ./info.json ./icon.svg ./target/${{ matrix.target }}/release/plugin.dylib
+          files: info.json ${{needs.check.outputs.name}} target/${{ matrix.target }}/release/plugin.dylib
+          dest: ${{needs.check.outputs.name}}.potext
       - name: Upload Artifacts
         uses: actions/upload-artifact@v3
         with:
@@ -116,7 +118,7 @@ jobs:
       - name: Compress
         uses: TonyBogdanov/zip@1.0
         with:
-          args: zip ${{needs.check.outputs.name}}.potext ./info.json ./icon.svg ./target/${{ matrix.target }}/release/plugin.so
+          args: zip ${{needs.check.outputs.name}}.potext ./info.json ./${{needs.check.outputs.name}} ./target/${{ matrix.target }}/release/plugin.so
       - name: Upload Artifacts
         uses: actions/upload-artifact@v3
         with:
