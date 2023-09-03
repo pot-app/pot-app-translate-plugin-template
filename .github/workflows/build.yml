@@ -48,6 +48,8 @@ jobs:
           rustup toolchain install --force-non-host stable-${{ matrix.target }}
       - name: Build
         run: cargo build --release --target ${{ matrix.target }}
+      - name: Rename
+        run: move target/${{ matrix.target }}/release/plugin.dll ./plugin.dll
       - uses: vimtor/action-zip@v1
         with:
           files: info.json ${{needs.check.outputs.name}} target/${{ matrix.target }}/release/plugin.dll
@@ -92,10 +94,10 @@ jobs:
       - name: Build
         run: cargo build --release --target ${{ matrix.target }}
       - name: Rename
-        run: sudo mv target/${{ matrix.target }}/release/libplugin.dylib target/${{ matrix.target }}/release/plugin.dylib
+        run: sudo mv target/${{ matrix.target }}/release/libplugin.dylib ./plugin.dylib
       - uses: vimtor/action-zip@v1
         with:
-          files: info.json ${{needs.check.outputs.name}} target/${{ matrix.target }}/release/plugin.dylib
+          files: info.json ${{needs.check.outputs.name}} plugin.dylib
           dest: ${{needs.check.outputs.name}}.potext
       - name: Upload Artifacts
         uses: actions/upload-artifact@v3
@@ -141,7 +143,7 @@ jobs:
           toolchain: stable-${{ matrix.target }}
       - uses: vimtor/action-zip@v1
         with:
-          files: info.json ${{needs.check.outputs.name}} target/${{ matrix.target }}/release/plugin.so
+          files: info.json ${{needs.check.outputs.name}} plugin.so
           dest: ${{needs.check.outputs.name}}.potext
       - name: Upload Artifacts
         uses: actions/upload-artifact@v3
