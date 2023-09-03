@@ -66,11 +66,41 @@ jobs:
           rustup toolchain install --force-non-host stable-${{ matrix.target }}
       - name: Build
         run: cargo build --release --target ${{ matrix.target }}
-      - name: Show Name
-        run: echo $(ls target/${{ matrix.target }}/release)
+      - name: Rename
+        run: sudo mv target/${{ matrix.target }}/release/libplugin.dylib target/${{ matrix.target }}/release/plugin.dylib
       - name: Upload Artifacts
         uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.target }}
-          path: target/${{ matrix.target }}/release/libplugin.dylib
+          path: target/${{ matrix.target }}/release/plugin.dylib
+          if-no-files-found: error
+  build-for-linux:
+    needs: check
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [ubuntu-latest]
+        target:
+          [
+            x86_64-unknown-linux-gnu,
+            i686-unknown-linux-gnu,
+            aarch64-unknown-linux-gnu,
+            armv7-unknown-linux-gnueabihf,
+          ]
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 1
+      - name: Build for Linux
+        uses: ./build-for-linux
+        with:
+          target: ${{ matrix.target }}
+          toolchain: stable-${{ matrix.target }}
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.target }}
+          path: target/${{ matrix.target }}/release/plugin.so
           if-no-files-found: error
