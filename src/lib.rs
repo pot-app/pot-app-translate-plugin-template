@@ -13,10 +13,15 @@ pub fn translate(
 ) -> Result<String, Box<dyn Error>> {
     let client = reqwest::blocking::ClientBuilder::new().build()?;
 
-    let mut url = needs["requestPath"].clone();
+    let mut url = match needs.get("requestPath") {
+        Some(url) => url.to_string(),
+        None => return Err("requestPath not found".into()),
+    };
+
     if !url.starts_with("http") {
         url = format!("https://{}", url);
     }
+
     let plain_text = text.replace("/", "@@");
     let encode_text = encode(plain_text.as_str());
 

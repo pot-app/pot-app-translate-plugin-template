@@ -7,13 +7,14 @@
 ### 1. 插件仓库创建
 
 - 以此仓库为模板创建一个新的仓库
-- 仓库名为 `pot-app-<插件名>`，例如 `pot-app-lingva`
+- 仓库名为 `pot-app-translate-plugin-<插件名>`，例如 `pot-app-translate-plugin-lingva`
 
 ### 2. 插件信息配置
 
 编辑 `info.json` 文件，修改以下字段：
 
 - `id`：插件唯一 id，必须以`[plugin]`开头，例如 `[plugin].com.pot-app.lingva`
+- `homepage`: 插件主页，填写你的仓库地址即可，例如 `https://github.com/pot-app/pot-app-translate-plugin-template`
 - `display`: 插件显示名称，例如 `Lingva`
 - `icon`: 插件图标，例如 `lingva.svg`
 - `needs`: 插件依赖，一个数组，每个依赖为一个对象，包含以下字段：
