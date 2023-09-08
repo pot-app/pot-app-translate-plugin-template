@@ -10,7 +10,7 @@ pub fn translate(
     to: &str,   // 目标语言
     // (pot会根据info.json 中的 language 字段传入插件需要的语言代码，无需再次转换)
     needs: HashMap<String, String>, // 插件需要的其他参数,由info.json定义
-) -> Result<String, Box<dyn Error>> {
+) -> Result<Value, Box<dyn Error>> {
     let client = reqwest::blocking::ClientBuilder::new().build()?;
 
     let mut url = match needs.get("requestPath") {
@@ -36,7 +36,7 @@ pub fn translate(
         Some(result.replace("@@", "/"))
     }
     if let Some(result) = parse_result(res) {
-        return Ok(result);
+        return Ok(Value::String(result));
     } else {
         return Err("Response Parse Error".into());
     }
