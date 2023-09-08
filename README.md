@@ -46,3 +46,5 @@ cargo build --release # 编译
 每次将仓库推送到 GitHub 之后 actions 会自动运行，将打包好的插件上传到 artifact，在 actions 页面可以下载
 
 每次提交 Tag 之后，actions 会自动运行，将打包好的插件上传到 release，在 release 页面可以下载打包好的插件
+
+> 注意需要在仓库设置中添加一个名为`TOKEN`的 secret，值为一个有权限的 GitHub Token，用于上传 release
