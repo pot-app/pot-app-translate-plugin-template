@@ -1,5 +1,7 @@
 # Pot-App 翻译插件模板仓库 (以 [Lingva](https://github.com/TheDavidDelta/lingva-translate) 为例)
 
+### [English](./README_EN.md) | 简体中文
+
 ### 此仓库为模板仓库，编写插件时可以直接由此仓库创建插件仓库
 
 ## 插件编写指南
@@ -25,6 +27,55 @@
 ### 3. 插件编写/编译
 
 编辑 `src/lib.rs` 实现 `translate` 函数
+
+#### 输入参数
+
+```rust
+    text: &str, // 待翻译文本
+    from: &str, // 源语言代码
+    to: &str,   // 目标语言代码
+    needs: HashMap<String, String>, // 插件需要的其他配置信息,由info.json定义
+```
+
+#### 返回值
+
+```rust
+// 文本翻译
+// 返回用Value包裹的String
+  return Ok(Value::String(result));
+// 词典
+// 返回指定格式的json
+  return Ok(json!(result));
+```
+
+词典返回 json 示例：
+
+```json
+{
+  "pronunciations": [
+    {
+      "region": "", // 地区
+      "symbol": "", // 音标
+      "voice": "" // 语音链接
+    }
+  ],
+  "explanations": [
+    {
+      "trait": "", // 词性
+      "explains": [""] // 释义
+    }
+  ],
+  "associations": [""], // 联想/变形
+  "sentence": [
+    {
+      "source": "", // 原文
+      "target": "" // 译文
+    }
+  ]
+}
+```
+
+#### 测试/编译
 
 ```bash
 cargo test --package plugin --lib -- tests --nocapture # 运行测试用例
