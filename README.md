@@ -56,7 +56,7 @@
     {
       "region": "", // 地区
       "symbol": "", // 音标
-      "voice": "" // 语音链接
+      "voice": [u8] // 语音字节数组
     }
   ],
   "explanations": [
