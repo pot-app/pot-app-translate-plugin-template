@@ -56,7 +56,7 @@ Dictionary returns json example:
     {
       "region": "",
       "symbol": "",
-      "voice": ""
+      "voice": [u8]
     }
   ],
   "explanations": [
