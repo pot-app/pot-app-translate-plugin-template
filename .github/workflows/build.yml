@@ -137,7 +137,7 @@ jobs:
         with:
           fetch-depth: 1
       - name: Build for Linux
-        uses: ./build-for-linux
+        uses: ./.github/build-for-linux
         with:
           target: ${{ matrix.target }}
           toolchain: stable-${{ matrix.target }}
