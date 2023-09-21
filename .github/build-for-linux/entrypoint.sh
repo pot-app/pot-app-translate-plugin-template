@@ -41,4 +41,4 @@ else
     echo "Unknown target: $INPUT_TARGET" && exit 1
 fi
 
-bash build.sh
+bash .github/build-for-linux/build.sh
