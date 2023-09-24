@@ -50,7 +50,7 @@ mod tests {
     fn try_request() {
         let mut needs = HashMap::new();
         needs.insert("requestPath".to_string(), "lingva.pot-app.com".to_string());
-        let result = translate("你好 世界！", "auto", "en", needs).unwrap();
+        let result = translate("你好 世界！", "auto", "en", "zh_cn", needs).unwrap();
         println!("{result}");
     }
 }
