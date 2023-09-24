@@ -34,6 +34,7 @@
     text: &str, // 待翻译文本
     from: &str, // 源语言代码
     to: &str,   // 目标语言代码
+    detect: &str, // 检测到的语言代码(未转换)
     needs: HashMap<String, String>, // 插件需要的其他配置信息,由info.json定义
 ```
 
