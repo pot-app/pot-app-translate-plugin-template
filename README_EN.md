@@ -34,6 +34,7 @@ Edit `src/lib.rs` to implement `translate` function
     text: &str, // text to be translated
     from: &str, // source language code
     to: &str,   // target language code
+    detect: &str, // detected language code (not convert)
     needs: HashMap<String, String>, // Additional configuration information required by the plugin, defined by info.json
 ```
 
