@@ -21,8 +21,10 @@ Edit the `info.json` file and modify the following fields:
 - `icon`: The icon of the plugin, for example `lingva.svg`
 - `needs`: Dependencies required by the plugin. It is an array where each dependency is an object that includes the following fields:
   - `key`: The key of the dependency, corresponding to its name in the configuration file. For example,`requestPath`.
-  - `display`: The display name of the dependency as shown to users. For example,`Request Path`.
-  - `language`: Mapping between language codes used in Pot and language codes used when sending requests to plugins.
+  - `display`: The display name of the dependency as shown to users, for example `Request Path`.
+  - `type`: Component type `input` | `select`
+  - `options`: Option list(Only `select` component)， for example `{"engine_a":"Engina A","engine_b":"Engina B"}`
+- `language`: Mapping between language codes used in Pot and language codes used when sending requests to plugins.
 
 ### 3. Plugin writing/compiling
 
