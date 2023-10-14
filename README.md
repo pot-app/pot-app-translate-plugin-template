@@ -22,6 +22,8 @@
 - `needs`: 插件依赖，一个数组，每个依赖为一个对象，包含以下字段：
   - `key`: 依赖 key，对应该项依赖在配置文件中的名称，例如 `requestPath`
   - `display`: 依赖显示名称，对应用户显示的名称，例如 `请求地址`
+  - `type`: 组件类型 `input` | `select`
+  - `options`: 选项列表(仅select组件需要)，例如 `{"engine_a":"Engina A","engine_b":"Engina B"}`
 - `language`: 插件支持的语言映射，将 pot 的语言代码和插件发送请求时的语言代码一一对应
 
 ### 3. 插件编写/编译
