@@ -16,9 +16,11 @@ pub fn translate(
 
     let mut url = match needs.get("requestPath") {
         Some(url) => url.to_string(),
-        None => return Err("requestPath not found".into()),
+        None => "lingva.pot-app.com".to_string(),
     };
-
+    if url.is_empty() {
+        url = "lingva.pot-app.com".to_string();
+    }
     if !url.starts_with("http") {
         url = format!("https://{}", url);
     }
