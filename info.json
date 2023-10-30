@@ -18,7 +18,7 @@
     "de": "de",
     "it": "it",
     "tr": "tr",
-    "pt": "pt",
+    "pt_pt": "pt",
     "pt_br": "pt",
     "vi": "vi",
     "id": "id",
@@ -27,6 +27,10 @@
     "ar": "ar",
     "hi": "hi",
     "mn_cy": "mn",
-    "km": "km"
+    "mn_mo": "mn",
+    "km": "km",
+    "nb_no": "no",
+    "nn_no": "no",
+    "fa": "fa"
   }
 }
